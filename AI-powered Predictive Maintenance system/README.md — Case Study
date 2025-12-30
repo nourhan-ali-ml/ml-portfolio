@@ -1,0 +1,92 @@
+# Predictive Maintenance System for Medical Devices
+
+## 📌 Overview
+This project is an end-to-end **AI-powered Predictive Maintenance system** designed to predict failure risks for medical devices based on operational and environmental logs.
+
+The system simulates a real-world production setup, including:
+- Machine Learning model training
+- REST API for inference
+- Prediction logging
+- Interactive monitoring dashboard
+
+---
+
+## 🎯 Problem Statement
+Unexpected failures in medical devices can cause:
+- Equipment downtime
+- Increased maintenance costs
+- Potential patient safety risks
+
+The goal is to **predict maintenance needs early** using device usage logs and sensor data.
+
+---
+
+## 🧠 Solution Approach
+
+### 1️⃣ Machine Learning
+- Model: **Random Forest Classifier**
+- Features:
+  - Device type
+  - Usage hours
+  - Temperature
+  - Error count
+- Outputs:
+  - `maintenance_needed` (binary)
+  - `risk_probability` (confidence score)
+
+---
+
+### 2️⃣ Backend API
+Built using **FastAPI** with the following endpoints:
+
+| Endpoint | Description |
+|--------|------------|
+| `/health` | Health check |
+| `/predict` | Predict maintenance risk |
+| `/logs` | View prediction history |
+
+All predictions are logged for monitoring and analysis.
+
+---
+
+### 3️⃣ Monitoring Dashboard
+- Interactive plots using Plotly
+- Filter by device type
+- Visualize risk distribution and trends
+- Designed to simulate real production monitoring
+
+---
+
+## 🏗️ System Architecture
+User Input
+↓
+FastAPI (/predict)
+↓
+ML Model (Random Forest)
+↓
+Prediction + Risk Score
+↓
+Logs Storage
+↓
+Monitoring Dashboard
+
+---
+
+## ⚙️ Tech Stack
+- **Python**
+- **scikit-learn**
+- **FastAPI**
+- **Pandas / NumPy**
+- **Plotly**
+- **Joblib**
+
+---
+
+## 📊 Example Prediction Response
+```json
+{
+  "maintenance_needed": 1,
+  "risk_probability": 0.87
+}
+
+
