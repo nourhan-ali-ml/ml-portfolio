@@ -94,28 +94,53 @@ Open `predictive_maintenance.ipynb` in Jupyter or Google Colab to see:
 - Model training and comparison
 - Performance evaluation and visualization
 
-### Run the API
+### Run the API (Local Development)
 ```bash
+# Install dependencies first
+pip install -r requirements.txt
+
+# Run the server
 uvicorn main:app --reload
 ```
 
+The API will start at: `http://localhost:8000`
+
+**Interactive Documentation:** Visit `http://localhost:8000/docs` for automatic API documentation powered by FastAPI.
+
 ### Test the API
+
+#### Using cURL:
 ```bash
 curl -X POST "http://localhost:8000/predict" \
   -H "Content-Type: application/json" \
   -d '{
-    "temperature": 78,
-    "vibration": 0.7,
+    "temperature": 78.5,
+    "vibration": 0.72,
     "operating_hours": 850
   }'
 ```
 
-**Response:**
+#### Using Python:
+```python
+import requests
+
+data = {
+    "temperature": 78.5,
+    "vibration": 0.72,
+    "operating_hours": 850
+}
+
+response = requests.post("http://localhost:8000/predict", json=data)
+print(response.json())
+```
+
+**Example Response:**
 ```json
 {
   "maintenance_needed": 1,
   "risk_level": "high",
-  "confidence": 0.82
+  "message": "⚠️ URGENT: High risk detected. Schedule immediate inspection and maintenance.",
+  "confidence": 0.847
 }
 ```
 
@@ -203,4 +228,4 @@ If you found this project helpful, please consider giving it a ⭐!
 
 ---
 
-**Made with for Healthcare Innovation**
+**Made with ❤️ for Healthcare Innovation**
