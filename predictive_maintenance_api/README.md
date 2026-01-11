@@ -1,137 +1,206 @@
-# Predictive Maintenance API
+# 🏥 Predictive Maintenance System for Medical Equipment
 
-A **production-style Machine Learning project** that demonstrates how to train a model for **predictive maintenance** and expose it via a **FastAPI** endpoint.
-
-The project is designed to bridge the gap between **Jupyter/Colab notebooks** and **real-world ML APIs**, following best practices used in junior-to-mid ML engineering roles.
+A machine learning-powered system that predicts maintenance needs for medical devices based on real-time sensor data, helping healthcare facilities prevent equipment failures and ensure continuous patient care.
 
 ---
 
-## 📌 Project Overview
+## 📊 Project Overview
 
-This project predicts whether **maintenance is needed** for industrial equipment based on:
+This project demonstrates an end-to-end predictive maintenance solution combining:
+- **Machine Learning Models** for failure prediction
+- **Production-Ready API** built with FastAPI
+- **Real-time Monitoring** of medical equipment health
 
-* Temperature
-* Vibration level
-* Operating hours
-
-A **RandomForestClassifier** is trained on simulated sensor data and served through a FastAPI-based API.
+### Key Features
+✅ Analyzes sensor data (temperature, vibration, operating hours)  
+✅ Predicts equipment at high risk of failure  
+✅ Prioritizes recall to minimize missed failures (critical in healthcare)  
+✅ RESTful API for easy integration into existing systems
 
 ---
 
-## 🧠 Machine Learning Model
+## 🎯 Problem Statement
 
-* Algorithm: Random Forest Classifier
-* Library: scikit-learn
-* Training Data: Simulated sensor readings
-* Output:
+In healthcare environments, unexpected equipment failures can:
+- Disrupt critical patient care
+- Lead to costly emergency repairs
+- Reduce operational efficiency
 
-  * `0` → No maintenance needed
-  * `1` → Maintenance needed
+**Solution:** Proactive maintenance scheduling based on ML-driven risk assessment.
 
-The trained model is saved as:
+---
 
+## 🧪 Model Performance
+
+After comparing multiple algorithms, **Logistic Regression** achieved the best balance:
+
+| Metric | Score | Why It Matters |
+|--------|-------|----------------|
+| **Recall** | 73% | Catches most devices needing maintenance |
+| **Precision** | 47% | Some false alarms, but acceptable tradeoff |
+| **F1-Score** | 57% | Balanced performance |
+| **Accuracy** | 60% | Overall correctness |
+
+### Why Prioritize Recall?
+In healthcare, **missing a real failure (false negative) is far more costly** than generating a false alarm (false positive). High recall ensures we catch devices at risk.
+
+---
+
+## 🔬 Methodology
+
+### 1. Data Generation
+- Simulated sensor data for 500 medical devices
+- Realistic failure patterns based on equipment thresholds:
+  - High temperature (>75°C) → increased failure risk
+  - High vibration (>0.65) → increased failure risk
+  - High operating hours (>800h) → increased failure risk
+
+### 2. Feature Engineering
+- **Temperature**: Equipment operating temperature
+- **Vibration**: Mechanical vibration levels
+- **Operating Hours**: Cumulative usage time
+
+### 3. Model Comparison
+Tested three algorithms with optimized hyperparameters:
+- ✅ **Logistic Regression** (Best - 57% F1-Score)
+- Random Forest (52% F1-Score)
+- XGBoost (51% F1-Score)
+
+### 4. Production Deployment
+- Built RESTful API with **FastAPI**
+- Real-time prediction endpoint
+- Easy integration with hospital management systems
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+```bash
+Python 3.8+
+pip install -r requirements.txt
 ```
-rf_model.pkl
+
+### Installation
+```bash
+git clone https://github.com/nourhan-ali-ml/predictive-maintenance-fastapi-ml.git
+cd predictive-maintenance-fastapi-ml
+pip install -r requirements.txt
 ```
 
----
+### Run the Notebook
+Open `predictive_maintenance.ipynb` in Jupyter or Google Colab to see:
+- Data generation and exploration
+- Model training and comparison
+- Performance evaluation and visualization
 
-## 🚀 API Endpoints
+### Run the API
+```bash
+uvicorn main:app --reload
+```
 
-### `POST /predict`
-
-Predicts whether maintenance is required.
-
-**Request Body (JSON):**
-
-```json
-{
-  "temperature": 72,
-  "vibration": 0.55,
-  "operating_hours": 500
-}
+### Test the API
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "temperature": 78,
+    "vibration": 0.7,
+    "operating_hours": 850
+  }'
 ```
 
 **Response:**
-
 ```json
 {
-  "maintenance_needed": 0
+  "maintenance_needed": 1,
+  "risk_level": "high",
+  "confidence": 0.82
 }
 ```
 
 ---
 
-## 🧪 Running in Google Colab
-
-This project was designed to run **fully inside Google Colab** without external servers or tunneling tools.
-
-To test the API inside Colab:
-
-* The FastAPI app is defined normally
-* Requests are tested using FastAPI's `TestClient`
-* No Uvicorn or ngrok required
-
-This avoids common asyncio and Python 3.12 issues in notebook environments.
-
----
-
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```
-project/
-│
-├── train.py              # Model training script
-├── rf_model.pkl          # Saved trained model
-├── api_colab.py          # FastAPI app (Colab-compatible)
-├── requirements.txt      # Dependencies
-└── README.md
+predictive-maintenance-fastapi-ml/
+├── predictive_maintenance.ipynb   # Model development & experiments
+├── main.py                        # FastAPI application
+├── model.pkl                      # Trained model (saved)
+├── requirements.txt               # Python dependencies
+└── README.md                      # Project documentation
 ```
 
 ---
 
-## 🛠 Tech Stack
+## 🔍 Key Insights
 
-* Python 3.12
-* FastAPI
-* scikit-learn
-* pandas
-* NumPy
-* Joblib
+### Feature Importance
+1. **Operating Hours** (44.7%) - Most predictive feature
+2. **Vibration** (29.7%) - Strong indicator of mechanical issues
+3. **Temperature** (25.6%) - Reflects thermal stress
 
----
-
-## 🎯 Why This Project Matters
-
-This project demonstrates:
-
-* End-to-end ML workflow (training → saving → inference)
-* Clean API design using FastAPI
-* Understanding of production constraints in notebook environments
-* Practical ML engineering skills beyond notebooks
-
-It is suitable for:
-
-* Junior ML Engineer roles
-* AI Engineer internships
-* ML portfolio / GitHub showcase
+### Model Behavior
+- **High Recall Strategy**: Designed to catch most at-risk devices
+- **Acceptable False Positives**: Maintenance teams prefer investigating false alarms over missing real failures
+- **Class Imbalance Handling**: Used class weighting and balanced sampling
 
 ---
 
-## 👤 Author
+## 🛠️ Tech Stack
 
-**Nourhan Ali**
-Biomedical Engineer | ML & AI Enthusiast
-
----
-
-## 📌 Future Improvements
-
-* Replace simulated data with real sensor datasets
-* Add input validation & logging
-* Dockerize the API
-* Deploy on cloud (AWS / GCP / Azure)
+- **Python 3.8+**
+- **scikit-learn** - ML models and evaluation
+- **XGBoost** - Gradient boosting
+- **FastAPI** - Production API framework
+- **Pandas & NumPy** - Data manipulation
+- **Matplotlib & Seaborn** - Visualization
 
 ---
 
-⭐ If you found this project useful, feel free to star the repository!
+## 📈 Future Enhancements
+
+- [ ] Time-series forecasting (predict failures X days in advance)
+- [ ] Integration with real hospital equipment data
+- [ ] Dashboard for maintenance team monitoring
+- [ ] Automated alert system (email/SMS notifications)
+- [ ] A/B testing with different risk thresholds
+- [ ] Model retraining pipeline with new data
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to:
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
+---
+
+## 📧 Contact
+
+**Nourhan Ali**  
+AI & Machine Learning Engineer  
+📧 bio.eng.nourhanali@gmail.com  
+💼 [LinkedIn](http://linkedin.com/in/nourhan-ali-71289415b)  
+🔗 [GitHub Portfolio](https://github.com/nourhan-ali-ml/ml-portfolio.git)
+
+---
+
+## 📜 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## ⭐ Acknowledgments
+
+Built as part of my transition into AI/ML engineering, applying machine learning to real-world healthcare challenges.
+
+If you found this project helpful, please consider giving it a ⭐!
+
+---
+
+**Made with for Healthcare Innovation**
